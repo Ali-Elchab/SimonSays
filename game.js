@@ -16,6 +16,43 @@ function nextlevel() {
   effects(nextColor);
 }
 
+function compare(button) {
+  click++;
+  playsound(button.id);
+  effects(button.id);
+  userSequence.push(button.id);
+  let buttonID = String(button.id).toLowerCase();
+  if (buttonID == systemSequence[click]) {
+    if (userSequence.length == systemSequence.length) {
+      setTimeout(function () {
+        userSequence = [];
+        nextlevel();
+        click = -1;
+      }, 500);
+    }
+  } else {
+    title.textContent = "Game Over, press anywhere to start again";
+    click = -1;
+    userSequence = [];
+    systemSequence = [];
+    document.body.style.cssText = "background-color:red";
+    setTimeout(function () {
+      document.body.style.cssText = "background-color:#011F3F";
+    }, 300);
+    playsound("wrong");
+    setTimeout(function () {
+      level = 0;
+    }, 500);
+  }
+}
+
+buttons.forEach(function (button) {
+  button.addEventListener("click", function () {
+    if (level > 0) {
+      compare(button);
+    }
+  });
+});
 function playsound(color) {
   let colorAudio = new Audio(`./sounds/${color}.mp3`);
   colorAudio.play();
