@@ -69,7 +69,7 @@ function compare(button) {
 }
 
 buttons.forEach(function (button) {
-  button.addEventListener("click", function () {
+  button.addEventListener("mousedown", function () {
     if (level > 0 && systemPlaying == false) {
       compare(button);
     }
@@ -96,7 +96,7 @@ function effects(color) {
   }
 }
 
-window.addEventListener("click", function () {
+window.addEventListener("mousedown", function () {
   if (level <= 0) {
     nextlevel();
   }
