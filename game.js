@@ -74,6 +74,12 @@ buttons.forEach(function (button) {
       compare(button);
     }
   });
+  button.addEventListener("touchstart", function (event) {
+    event.preventDefault(); // Prevents both mousedown and touchstart events
+    if (level > 0 && systemPlaying == false) {
+      compare(button);
+    }
+  });
 });
 function playsound(color) {
   let colorAudio = new Audio(`./Assets/sounds/${color}.mp3`);
@@ -90,7 +96,14 @@ function effects(color) {
   }
 }
 
-window.addEventListener("keydown", function () {
+window.addEventListener("click", function () {
+  if (level <= 0) {
+    nextlevel();
+  }
+});
+
+window.addEventListener("touchstart", function (event) {
+  event.preventDefault(); // Prevents both mousedown and touchstart events
   if (level <= 0) {
     nextlevel();
   }
