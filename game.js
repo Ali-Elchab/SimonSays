@@ -3,10 +3,16 @@ let systemSequence = [];
 let userSequence = [];
 let buttons = document.querySelectorAll(".btn");
 let title = document.getElementById("level-title");
+let highScoreText = document.querySelector("#high-score");
+let newHighScoreValue = document.getElementById("newHighScoreValue");
+let container = document.querySelector(".container");
 let level = 0;
+let highscore = 0;
 let click = -1;
+let systemPlaying = false;
 
 function nextlevel() {
+  systemPlaying = true;
   level++;
   title.textContent = `Level ${level}`;
   let random = Math.floor(Math.random() * 4);
@@ -14,6 +20,9 @@ function nextlevel() {
   systemSequence.push(nextColor);
   playsound(nextColor);
   effects(nextColor);
+  setTimeout(function () {
+    systemPlaying = false;
+  }, 100);
 }
 
 function compare(button) {
@@ -35,11 +44,24 @@ function compare(button) {
     click = -1;
     userSequence = [];
     systemSequence = [];
-    document.body.style.cssText = "background-color:red";
+    document.body.classList.add("game-over");
     setTimeout(function () {
-      document.body.style.cssText = "background-color:#011F3F";
+      document.body.classList.remove("game-over");
     }, 300);
     playsound("wrong");
+    if (level > highscore) {
+      highscore = level;
+      highScoreText.innerText = `${highscore}`;
+      newHighScoreValue.innerText = `${highscore}`;
+      setTimeout(function () {
+        newHighScoreSection.style.display = "block";
+        container.style.display = "none";
+      }, 700);
+      setTimeout(function () {
+        newHighScoreSection.style.display = "none";
+        container.style.display = "block";
+      }, 2500);
+    }
     setTimeout(function () {
       level = 0;
     }, 500);
@@ -48,31 +70,27 @@ function compare(button) {
 
 buttons.forEach(function (button) {
   button.addEventListener("click", function () {
-    if (level > 0) {
+    if (level > 0 && systemPlaying == false) {
       compare(button);
     }
   });
 });
 function playsound(color) {
-  let colorAudio = new Audio(`./sounds/${color}.mp3`);
+  let colorAudio = new Audio(`./Assets/sounds/${color}.mp3`);
   colorAudio.play();
 }
 
 function effects(color) {
   let colorBox = document.getElementById(color);
   if (colorBox) {
-    colorBox.style.transition = "opacity 0.1s";
-    colorBox.style.opacity = 0;
-    colorBox.style.boxShadow = "0 0 15px 10px white";
-
+    colorBox.classList.add("pressed");
     setTimeout(function () {
-      colorBox.style.opacity = 1;
-      colorBox.style.boxShadow = "initial";
+      colorBox.classList.remove("pressed");
     }, 120);
   }
 }
 
-document.addEventListener("click", function () {
+window.addEventListener("keydown", function () {
   if (level <= 0) {
     nextlevel();
   }
